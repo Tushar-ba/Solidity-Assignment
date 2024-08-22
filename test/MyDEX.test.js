@@ -1,8 +1,8 @@
-// test/DEX.test.js
+// test/MyDEX.test.js
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("DEX", function () {
+describe("MyDEX", function () {
     let dex;
     let factory;
     let tokenA;
@@ -28,6 +28,10 @@ describe("DEX", function () {
 
         // Create a pair
         await factory.createPair(tokenA.address, tokenB.address);
+
+        // Transfer some tokens to the user for testing
+        await tokenA.transfer(user.address, ethers.utils.parseEther("10"));
+        await tokenB.transfer(user.address, ethers.utils.parseEther("10"));
     });
 
     it("should add liquidity correctly", async function () {
@@ -45,12 +49,10 @@ describe("DEX", function () {
     });
 
     it("should swap tokens correctly", async function () {
-        // Transfer some tokens to the user and approve DEX
-        await tokenA.transfer(user.address, ethers.utils.parseEther("10"));
         await tokenA.connect(user).approve(dex.address, ethers.utils.parseEther("10"));
-    
+
         await dex.connect(user).swapTokens(tokenA.address, tokenB.address, ethers.utils.parseEther("10"));
-    
+
         const userTokenBBalance = await tokenB.balanceOf(user.address);
         expect(userTokenBBalance).to.be.gt(0); // User should have received some Token B
     });
@@ -60,6 +62,7 @@ describe("DEX", function () {
         const pair = await ethers.getContractAt("MyTokenPair", pairAddress);
 
         const liquidity = await pair.balanceOf(owner.address);
+        expect(liquidity).to.be.gt(0); // Ensure the owner has liquidity tokens
 
         await pair.approve(dex.address, liquidity);
         await dex.removeLiquidity(tokenA.address, tokenB.address, liquidity);
