@@ -25,8 +25,8 @@ the console should show a result of this type:-
 
 ## Deployment
 - create a .env file in the root directory and paste the following there
-POLYGON_API_KEY= YOUR ALCHEMY API key (get one from here `https://dashboard.alchemy.com/` select   )
-PRIVATE_KEY=YOUR PRIVATE KEY (from metamask)
+### POLYGON_API_KEY= YOUR ALCHEMY API key (get one from here `https://dashboard.alchemy.com/` select   ) \n
+### PRIVATE_KEY=YOUR PRIVATE KEY (from metamask)
 
 - After this run this command in root directory:-
 
