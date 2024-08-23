@@ -41,7 +41,6 @@ contract MyDEX {
         pairContract.updateReserves(reserveOut - amountOut, reserveIn + amountIn);
     }
 }
-// In MyDEX.sol
 
 function removeLiquidity(address tokenA, address tokenB, uint liquidity) external {
     address pair = factory.getPair(tokenA, tokenB);
