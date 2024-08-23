@@ -25,7 +25,7 @@ the console should show a result of this type:-
 
 ## Deployment
 - create a .env file in the root directory and paste the following there
-### POLYGON_API_KEY= YOUR ALCHEMY API key (get one from here `https://dashboard.alchemy.com/` select   ) \n
+### POLYGON_API_KEY= YOUR ALCHEMY API key (get one from here `https://dashboard.alchemy.com/` select   ) 
 ### PRIVATE_KEY=YOUR PRIVATE KEY (from metamask)
 
 - After this run this command in root directory:-
@@ -250,9 +250,12 @@ The `MyDEX` contract is a decentralized exchange (DEX) that facilitates adding l
 
 ```
 Deploying contracts with the account: 0x49f51e3C94B459677c3B1e611DB3E44d4E6b1D55
-Token A deployed to: 0x14Ec70b86852B030C7411f73F9C026AFA89875d1
-Token B deployed to: 0x4C033EB7Baf936cF2FFED08D1C948106641095cf
-MyTokenFactory deployed to: 0x84156870499fb4ee52570c1263590ecf49BA6796
-Token pair created at address: 0x5ECbA0A774cf0892d39ccF988658004A548a39cb
-MyDEX deployed to: 0x24f6f055B8fc1218d760D871bF93e167e0CbfE9B
+- Token A deployed to: 0x14Ec70b86852B030C7411f73F9C026AFA89875d1 (https://amoy.polygonscan.com/address/0x14Ec70b86852B030C7411f73F9C026AFA89875d1)
+- Token B deployed to: 0x4C033EB7Baf936cF2FFED08D1C948106641095cf
+- MyTokenFactory deployed to: 0x84156870499fb4ee52570c1263590ecf49BA6796 (https://amoy.polygonscan.com/address/0x84156870499fb4ee52570c1263590ecf49BA6796)
+- Token pair created at address: 0x5ECbA0A774cf0892d39ccF988658004A548a39cb (https://amoy.polygonscan.com/address/0x5ECbA0A774cf0892d39ccF988658004A548a39cb)
+- MyDEX deployed to: 0x24f6f055B8fc1218d760D871bF93e167e0CbfE9B (https://amoy.polygonscan.com/address/0x24f6f055B8fc1218d760D871bF93e167e0CbfE9B)
+
 Liquidity added to the DEX
+
+
