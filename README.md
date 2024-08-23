@@ -21,7 +21,7 @@ cd into root directory and execute the following command
 
 npx hardhat test 
 the console should show a result of this type:-
-![Result]("C:\Users\tusha\OneDrive\Pictures\Screenshots\Screenshot 2024-08-22 122319.png")
+![Result](./images/Testing%20result.png)
 
 ## Deployment
 - create a .env file in the root directory and paste the following there
@@ -33,7 +33,7 @@ PRIVATE_KEY=YOUR PRIVATE KEY (from metamask)
 npx hardhat run scripts/deploy.js --network mumbai 
 
 The expected result if the deployment was successfull should look like this:-
-![Result]("C:\Users\tusha\OneDrive\Pictures\Screenshots\Screenshot 2024-08-23 094821.png")
+![Result](./images/Depolyment%20result.png)
 
 
 
