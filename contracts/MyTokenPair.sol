@@ -12,6 +12,9 @@ contract MyTokenPair is IERC20 {
     mapping(address => mapping(address => uint)) public allowance;
     uint private _totalSupply;
 
+    // Define events for debugging
+    event Debug(string message, uint value1, uint value2);
+
     constructor(address _token0, address _token1) {
         token0 = _token0;
         token1 = _token1;
@@ -58,19 +61,37 @@ contract MyTokenPair is IERC20 {
     }
 
     function burn(address to) external returns (uint amount0, uint amount1) {
-        uint liquidity = balanceOf[to];
-        require(liquidity > 0, "No liquidity to burn");
-        
-        amount0 = liquidity * reserve0 / _totalSupply;
-        amount1 = liquidity * reserve1 / _totalSupply;
+    uint liquidity = balanceOf[address(this)];
+    require(liquidity > 0, "No liquidity to burn");
 
-        balanceOf[to] -= liquidity;
-        _totalSupply -= liquidity;
-        reserve0 -= amount0;
-        reserve1 -= amount1;
+    // Emit debug information
+    emit Debug("Reserves before burn:", reserve0, reserve1);
+    emit Debug("Liquidity before burn:", liquidity, _totalSupply);
 
-        emit Transfer(to, address(0), liquidity);
-    }
+    amount0 = (liquidity * reserve0) / _totalSupply;
+    amount1 = (liquidity * reserve1) / _totalSupply;
+
+    require(amount0 > 0 && amount1 > 0, "Insufficient liquidity burned");
+
+    _burn(address(this), liquidity);
+    reserve0 -= amount0;
+    reserve1 -= amount1;
+
+    // Emit debug information after burn
+    emit Debug("Reserves after burn:", reserve0, reserve1);
+    emit Debug("Amounts returned:", amount0, amount1);
+
+    return (amount0, amount1);
+}
+
+function _burn(address account, uint256 amount) internal {
+    require(account != address(0), "ERC20: burn from the zero address");
+    require(balanceOf[account] >= amount, "ERC20: burn amount exceeds balance");
+    
+    balanceOf[account] -= amount;
+    _totalSupply -= amount;
+    emit Transfer(account, address(0), amount);
+}
 
     function getReserves() external view returns (uint, uint) {
         return (reserve0, reserve1);

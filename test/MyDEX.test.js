@@ -1,4 +1,3 @@
-// test/MyDEX.test.js
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
@@ -49,28 +48,54 @@ describe("MyDEX", function () {
     });
 
     it("should swap tokens correctly", async function () {
-        await tokenA.connect(user).approve(dex.address, ethers.utils.parseEther("10"));
+        // Add liquidity first
+        await tokenA.approve(dex.address, ethers.utils.parseEther("100"));
+        await tokenB.approve(dex.address, ethers.utils.parseEther("100"));
+        await dex.addLiquidity(tokenA.address, tokenB.address, ethers.utils.parseEther("100"), ethers.utils.parseEther("100"));
 
+        // Now perform the swap
+        await tokenA.connect(user).approve(dex.address, ethers.utils.parseEther("10"));
         await dex.connect(user).swapTokens(tokenA.address, tokenB.address, ethers.utils.parseEther("10"));
 
         const userTokenBBalance = await tokenB.balanceOf(user.address);
-        expect(userTokenBBalance).to.be.gt(0); // User should have received some Token B
+        expect(userTokenBBalance).to.be.gt(0);
     });
 
     it("should remove liquidity correctly", async function () {
         const pairAddress = await factory.getPair(tokenA.address, tokenB.address);
         const pair = await ethers.getContractAt("MyTokenPair", pairAddress);
-
+    
+        // Add liquidity to ensure there are liquidity tokens
+        const addAmount = ethers.utils.parseEther("100");
+        await tokenA.approve(dex.address, addAmount);
+        await tokenB.approve(dex.address, addAmount);
+        await dex.addLiquidity(tokenA.address, tokenB.address, addAmount, addAmount);
+    
+        // Get liquidity token balance for the owner
         const liquidity = await pair.balanceOf(owner.address);
         expect(liquidity).to.be.gt(0); // Ensure the owner has liquidity tokens
-
-        await pair.approve(dex.address, liquidity);
-        await dex.removeLiquidity(tokenA.address, tokenB.address, liquidity);
-
-        const ownerTokenABalance = await tokenA.balanceOf(owner.address);
-        const ownerTokenBBalance = await tokenB.balanceOf(owner.address);
-
-        expect(ownerTokenABalance).to.be.gt(0); // Owner should have received some Token A
-        expect(ownerTokenBBalance).to.be.gt(0); // Owner should have received some Token B
+    
+        // Check liquidity token balance before removing
+        console.log("Liquidity tokens before remove:", liquidity.toString());
+    
+        // Get token balances before removing liquidity
+        const tokenABalanceBefore = await tokenA.balanceOf(owner.address);
+        const tokenBBalanceBefore = await tokenB.balanceOf(owner.address);
+    
+        // Approve and remove liquidity
+        await pair.connect(owner).approve(dex.address, liquidity);
+        await dex.connect(owner).removeLiquidity(tokenA.address, tokenB.address, liquidity);
+    
+        // Check balances after removing liquidity
+        const tokenABalanceAfter = await tokenA.balanceOf(owner.address);
+        const tokenBBalanceAfter = await tokenB.balanceOf(owner.address);
+    
+        // Ensure the owner received tokens after removing liquidity
+        expect(tokenABalanceAfter).to.be.gt(tokenABalanceBefore);
+        expect(tokenBBalanceAfter).to.be.gt(tokenBBalanceBefore);
+    
+        // Ensure liquidity tokens were burned
+        const remainingLiquidity = await pair.balanceOf(owner.address);
+        expect(remainingLiquidity).to.equal(0); // Liquidity tokens should be fully burned
     });
 });

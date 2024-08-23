@@ -55,8 +55,13 @@ function removeLiquidity(address tokenA, address tokenB, uint liquidity) externa
     // Call the burn function
     (uint amountA, uint amountB) = pairContract.burn(msg.sender);
 
+    // Ensure that the burn function returns expected amounts
+    require(amountA > 0 && amountB > 0, "Invalid burn amounts");
+
     // Transfer the amounts back to the user
     require(IERC20(tokenA).transfer(msg.sender, amountA), "Token A transfer failed");
     require(IERC20(tokenB).transfer(msg.sender, amountB), "Token B transfer failed");
 }
+
+
 }
